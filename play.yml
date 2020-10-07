@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: root
+  roles:
+    - common
+  become: true
+
+- hosts: webserver
+  remote_user: root
+  roles:
+    - webserver
+  become: true
+
+- hosts: mavenbuilder
+  remote_user: root
+  roles:
+    - mavenbuilder
+  become: true

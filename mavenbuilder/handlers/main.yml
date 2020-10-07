@@ -1,0 +1,7 @@
+---
+# handlers file for mavenbuilder
+- name: restart_tomcat
+  service:
+    name: tomcat8
+    state: restarted
+  delegate_to: "{{ groups['webserver'][0] }}"

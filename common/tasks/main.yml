@@ -1,0 +1,8 @@
+---
+# tasks file for common
+- name: ensure python, python-lxml, jdk and rsync installed
+  become: true
+  apt:
+    name: ['python3', 'default-jdk', 'python-lxml', 'rsync']
+    state: present
+    update_cache: true

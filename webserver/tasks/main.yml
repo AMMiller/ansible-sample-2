@@ -1,0 +1,43 @@
+---
+# tasks file for webserver
+- name: ensure tomcat8, jdk installed
+  apt:
+    name: tomcat8
+    state: present
+    update_cache: true
+
+- name: ensure tomcat enabled
+  service:
+    name: tomcat8
+    enabled: true
+
+- name: Подчищаем корневую директорию томката
+  file:
+    path: "{{ document_root }}/*"
+    state: absent
+
+- name: Корневая директория томката есть
+  file:
+    path: "{{ document_root }}"
+    state: directory
+
+- name: назначаем томкат на 80 порт
+  xml:
+    path: "{{ tomcat_conf_dir }}/server.xml"
+    xpath: /Server/Service/Connector
+    attribute: port
+    value: "80"
+  notify: restart_nginx
+
+- name: create ssh key
+  user:
+    name: root
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: /root/.ssh/id_rsa
+
+- name: fetch pub key from tomcat webserver
+  fetch: 
+    src: /root/.ssh/id_rsa.pub
+    dest: /tmp/webserver_id_rsa.pub
+    flat: true

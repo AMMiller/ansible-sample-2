@@ -1,0 +1,4 @@
+---
+# vars file for mavenbuilder
+proj_dir: /var/lib/boxfuse-sample-java-war-hello
+document_root: /var/lib/tomcat8/webapps/ROOT

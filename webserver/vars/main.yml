@@ -1,0 +1,4 @@
+---
+# vars file for webserver
+document_root: /var/lib/tomcat8/webapps/ROOT
+tomcat_conf_dir: /etc/tomcat8

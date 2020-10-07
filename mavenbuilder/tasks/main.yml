@@ -1,0 +1,38 @@
+---
+# tasks file for mavenbuilder
+- name: ensure python, maven, jdk, git installed
+  become: true
+  apt:
+    name: ['maven', 'git']
+    state: present
+    update_cache: true
+ 
+- name: Ensure that project dir is empty
+  file:
+    path: "{{ proj_dir }}"
+    state: absent
+
+- name: Clone project
+  git:
+    repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
+    dest: "{{ proj_dir }}"
+
+- name: Build project
+  shell: "mvn package -f {{ proj_dir }}/pom.xml"
+
+- name: deploy pub key (webserver -> maven)
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '/tmp/webserver_id_rsa.pub') }}"
+
+- name: Sync artifact with Tomcat
+  synchronize:
+    src: "{{ proj_dir }}/target/hello-1.0/*"
+    dest: "{{ document_root }}"
+    mode: pull
+  notify: restart_tomcat
+  delegate_to: "{{ groups['webserver'][0] }}"
+  
+  
+
