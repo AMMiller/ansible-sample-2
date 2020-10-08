@@ -11,23 +11,23 @@
     name: tomcat8
     enabled: true
 
-- name: Подчищаем корневую директорию томката
+- name: Clear document_root
   file:
     path: "{{ document_root }}/*"
     state: absent
 
-- name: Корневая директория томката есть
+- name: document_root exists
   file:
     path: "{{ document_root }}"
     state: directory
 
-- name: назначаем томкат на 80 порт
+- name: change port 8080 to 80
   xml:
     path: "{{ tomcat_conf_dir }}/server.xml"
     xpath: /Server/Service/Connector
     attribute: port
     value: "80"
-  notify: restart_nginx
+  notify: restart_tomcat
 
 - name: create ssh key
   user:
